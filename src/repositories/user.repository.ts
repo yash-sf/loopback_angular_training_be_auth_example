@@ -1,9 +1,9 @@
 import {inject} from '@loopback/core';
-import {DefaultCrudRepository} from '@loopback/repository';
+import {SoftCrudRepository} from 'loopback4-soft-delete';
 import {AuthdatasourceDataSource} from '../datasources';
 import {AuthUser, AuthUserRelations} from '../models';
 
-export class UserRepository extends DefaultCrudRepository<
+export class UserRepository extends SoftCrudRepository<
   AuthUser,
   typeof AuthUser.prototype.id,
   AuthUserRelations

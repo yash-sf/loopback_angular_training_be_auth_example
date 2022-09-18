@@ -186,11 +186,14 @@ export class UserCrudController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['DeleteUser']})
   @del('/users/{id}')
   @response(204, {
     description: 'AuthUser DELETE success',
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
-    await this.userRepository.deleteById(id);
+    await this.userRepository.deleteById(id, {
+      deletedBy: 3,
+    });
   }
 }
