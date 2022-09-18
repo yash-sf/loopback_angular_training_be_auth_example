@@ -21,6 +21,8 @@ import {
 } from '@loopback/rest';
 import * as jwt from 'jsonwebtoken';
 import {authenticate, AuthErrorKeys, STRATEGY} from 'loopback4-authentication';
+import {authorize} from 'loopback4-authorization';
+
 import {AuthUser} from '../models';
 import {UserRepository} from '../repositories';
 
@@ -30,6 +32,8 @@ export class UserCrudController {
     public userRepository: UserRepository,
   ) {}
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['CreateUser']})
   @post('/users')
   @response(200, {
     description: 'AuthUser model instance',
@@ -90,8 +94,9 @@ export class UserCrudController {
     return {token};
   }
 
-  @get('/users')
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['ListUsers']})
+  @get('/users')
   @response(200, {
     description: 'Array of AuthUser model instances',
     content: {
@@ -109,8 +114,9 @@ export class UserCrudController {
     return this.userRepository.find(filter);
   }
 
-  @patch('/users')
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['UpdateUsers']})
+  @patch('/users')
   @response(200, {
     description: 'AuthUser PATCH success count',
     content: {'application/json': {schema: CountSchema}},
@@ -129,8 +135,9 @@ export class UserCrudController {
     return this.userRepository.updateAll(user, where);
   }
 
-  @get('/users/{id}')
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GetUser']})
+  @get('/users/{id}')
   @response(200, {
     description: 'AuthUser model instance',
     content: {
@@ -147,8 +154,8 @@ export class UserCrudController {
     return this.userRepository.findById(id, filter);
   }
 
-  @patch('/users/{id}')
   @authenticate(STRATEGY.BEARER)
+  @patch('/users/{id}')
   @response(204, {
     description: 'AuthUser PATCH success',
   })
@@ -166,8 +173,8 @@ export class UserCrudController {
     await this.userRepository.updateById(id, user);
   }
 
-  @put('/users/{id}')
   @authenticate(STRATEGY.BEARER)
+  @put('/users/{id}')
   @response(204, {
     description: 'AuthUser PUT success',
   })
@@ -178,8 +185,8 @@ export class UserCrudController {
     await this.userRepository.replaceById(id, user);
   }
 
-  @del('/users/{id}')
   @authenticate(STRATEGY.BEARER)
+  @del('/users/{id}')
   @response(204, {
     description: 'AuthUser DELETE success',
   })

@@ -19,13 +19,15 @@ export class BearerTokenVerifyProvider
       const user = verify(token, process.env.JWT_SECRET as string, {
         issuer: process.env.JWT_ISSUER,
       }) as any;
+
       if (!user) throw new HttpErrors.Unauthorized(AuthErrorKeys.TokenInvalid);
+
       const authUser: AuthUser = await this.userRepository.findById(
         user.userId,
       );
       if (!authUser)
         throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
-      return user;
+      return authUser;
     };
   }
 }

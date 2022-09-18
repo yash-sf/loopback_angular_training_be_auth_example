@@ -9,6 +9,10 @@ import {
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import {AuthenticationComponent, Strategies} from 'loopback4-authentication';
+import {
+  AuthorizationBindings,
+  AuthorizationComponent,
+} from 'loopback4-authorization';
 import path from 'path';
 import {BearerTokenVerifyProvider} from './providers/bearer.provider';
 import {MySequence} from './sequence';
@@ -36,6 +40,10 @@ export class AuthExampleApplication extends BootMixin(
     this.bind(Strategies.Passport.BEARER_TOKEN_VERIFIER).toProvider(
       BearerTokenVerifyProvider,
     );
+    this.bind(AuthorizationBindings.CONFIG).to({
+      allowAlwaysPaths: ['/explorer', '/login'],
+    });
+    this.component(AuthorizationComponent);
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
