@@ -56,6 +56,8 @@ export class UserCrudController {
     return this.userRepository.create(user);
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GetUserCount']})
   @get('/users/count')
   @response(200, {
     description: 'AuthUser model count',
@@ -155,6 +157,7 @@ export class UserCrudController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['PatchUser']})
   @patch('/users/{id}')
   @response(204, {
     description: 'AuthUser PATCH success',
@@ -174,6 +177,7 @@ export class UserCrudController {
   }
 
   @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['UpdateUser']})
   @put('/users/{id}')
   @response(204, {
     description: 'AuthUser PUT success',
